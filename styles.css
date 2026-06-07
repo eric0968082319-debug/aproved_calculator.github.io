@@ -1,0 +1,517 @@
+/* ==========================================================================
+   全域樣式與字型設定 (Global Reset & Typography)
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0b0c16 0%, #15162a 50%, #080911 100%);
+    font-family: 'Inter', sans-serif;
+    color: #ffffff;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* ==========================================================================
+   背景動態炫彩光暈 (Dynamic Background Glows for Glassmorphism)
+   ========================================================================== */
+.bg-glow-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.bg-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.35;
+    animation: floatGlow 20s infinite ease-in-out alternate;
+}
+
+/* 粉色光暈 - 左上 */
+.circle-1 {
+    width: 450px;
+    height: 450px;
+    background: radial-gradient(circle, #ff0055 0%, rgba(255, 0, 85, 0) 70%);
+    top: -50px;
+    left: -50px;
+    animation-delay: 0s;
+}
+
+/* 藍色光暈 - 右下 */
+.circle-2 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, #00f0ff 0%, rgba(0, 240, 255, 0) 70%);
+    bottom: -100px;
+    right: -100px;
+    animation-delay: -5s;
+}
+
+/* 紫色光暈 - 中偏右 */
+.circle-3 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, #7000ff 0%, rgba(112, 0, 255, 0) 70%);
+    top: 30%;
+    right: 15%;
+    animation-delay: -10s;
+}
+
+@keyframes floatGlow {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+    50% {
+        transform: translate(40px, -30px) scale(1.1);
+    }
+    100% {
+        transform: translate(-30px, 40px) scale(0.9);
+    }
+}
+
+/* ==========================================================================
+   計算機主體外框 (Glassmorphism Chassis)
+   ========================================================================== */
+.calculator-chassis {
+    width: 900px;
+    max-width: 95vw;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-radius: 28px;
+    padding: 28px;
+    box-shadow: 
+        0 24px 70px rgba(0, 0, 0, 0.35),
+        inset 0 1px 1px rgba(255, 255, 255, 0.15);
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+/* 計算機頂部標題 */
+.calc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0 4px;
+}
+
+.calc-title {
+    font-size: 13px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.45);
+    letter-spacing: 2.5px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* 計算機狀態燈 */
+.calc-status {
+    display: flex;
+    gap: 8px;
+}
+
+.status-badge {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 5px;
+    padding: 3px 8px;
+    font-size: 10px;
+    font-family: 'Orbitron', monospace;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.55);
+    transition: all 0.2s ease;
+}
+
+#indicator-mode {
+    color: #00ffcc;
+    text-shadow: 0 0 6px rgba(0, 255, 204, 0.4);
+    border-color: rgba(0, 255, 204, 0.2);
+}
+
+#indicator-memory {
+    color: #ffd700;
+    text-shadow: 0 0 6px rgba(255, 215, 0, 0.4);
+    border-color: rgba(255, 215, 0, 0.2);
+}
+
+.status-badge.hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.8);
+    width: 0;
+    padding: 3px 0;
+    margin: 0;
+    border: none;
+}
+
+/* ==========================================================================
+   顯示螢幕區塊 (LCD/LED Display)
+   ========================================================================== */
+.calc-display {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 20px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    box-shadow: 
+        inset 0 4px 20px rgba(0, 0, 0, 0.4),
+        0 2px 4px rgba(255, 255, 255, 0.02);
+}
+
+.display-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* 輸入公式欄位 */
+.expression-line {
+    width: 100%;
+    min-height: 28px;
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.55);
+    text-align: right;
+    white-space: nowrap;
+    overflow-x: auto;
+    direction: ltr;
+    padding-bottom: 4px;
+    letter-spacing: 0.5px;
+    font-family: 'Inter', sans-serif;
+}
+
+/* 用隱藏捲軸 */
+.expression-line::-webkit-scrollbar {
+    display: none;
+}
+.expression-line {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* 結果與預覽欄位 */
+.result-line {
+    width: 100%;
+    min-height: 48px;
+    font-size: 38px;
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    color: #00ffcc;
+    text-align: right;
+    letter-spacing: 1px;
+    text-shadow: 0 0 12px rgba(0, 255, 204, 0.35);
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+/* 預覽狀態的結果樣式 */
+.result-line.preview {
+    color: rgba(0, 255, 204, 0.45);
+    font-size: 28px;
+    font-weight: 500;
+    text-shadow: 0 0 6px rgba(0, 255, 204, 0.15);
+}
+
+.result-line::-webkit-scrollbar {
+    display: none;
+}
+.result-line {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* ==========================================================================
+   鍵盤切換分頁 (Mobile Tab Navigation)
+   ========================================================================== */
+.mobile-tabs {
+    display: none; /* 預設在桌面版隱藏 */
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 18px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 4px;
+}
+
+.tab-btn {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.tab-btn:hover {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.tab-btn.active {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* ==========================================================================
+   鍵盤區域 (Keypad Dashboard)
+   ========================================================================== */
+.calc-keypad {
+    display: flex;
+    gap: 24px;
+    width: 100%;
+}
+
+.keypad-panel {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+/* ==========================================================================
+   玻璃按鈕通用設定 (Glass Button Component)
+   ========================================================================== */
+.btn {
+    height: 56px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    font-size: 16px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.85);
+    cursor: pointer;
+    outline: none;
+    user-select: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 
+        0 4px 10px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 按鈕懸停效果 */
+.btn:hover {
+    background: rgba(255, 255, 255, 0.09);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+/* 按鈕按下效果 */
+.btn:active {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(1px);
+    box-shadow: 
+        0 2px 6px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+/* ==========================================================================
+   各式功能按鈕主題配色 (Button Theme Customization)
+   ========================================================================== */
+
+/* 1. 數字按鈕：經典半透明 */
+.btn-num {
+    background: rgba(255, 255, 255, 0.04);
+    font-size: 18px;
+    font-weight: 600;
+}
+.btn-num:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+/* 2. 基礎運算子按鈕：淡藍色 */
+.btn-op {
+    background: rgba(0, 168, 255, 0.08);
+    border-color: rgba(0, 168, 255, 0.15);
+    color: #38b6ff;
+    font-size: 20px;
+}
+.btn-op:hover {
+    background: rgba(0, 168, 255, 0.18);
+    border-color: rgba(0, 168, 255, 0.3);
+    color: #55c2ff;
+}
+
+/* 3. 等於按鈕：炫彩霓虹 */
+.btn-equals {
+    background: linear-gradient(135deg, #00ffcc 0%, #00a8ff 100%);
+    border: none;
+    color: #0c0d16;
+    font-weight: 700;
+    box-shadow: 
+        0 4px 15px rgba(0, 255, 204, 0.3),
+        inset 0 1px 1px rgba(255, 255, 255, 0.3);
+}
+.btn-equals:hover {
+    background: linear-gradient(135deg, #1affd2 0%, #1ab5ff 100%);
+    box-shadow: 
+        0 6px 20px rgba(0, 255, 204, 0.45),
+        inset 0 1px 1px rgba(255, 255, 255, 0.4);
+    color: #0c0d16;
+}
+.btn-equals:active {
+    background: linear-gradient(135deg, #00e6b8 0%, #0099e6 100%);
+    box-shadow: 0 2px 8px rgba(0, 255, 204, 0.2);
+}
+
+/* 4. 控制/退格按鈕：中性灰 */
+.btn-ctrl {
+    background: rgba(255, 255, 255, 0.05);
+    color: #cbd2e0;
+}
+.btn-ctrl:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+/* 5. 清除按鈕 (AC)：亮紅色 */
+.btn-danger {
+    background: rgba(255, 75, 75, 0.08);
+    border-color: rgba(255, 75, 75, 0.15);
+    color: #ff4b4b;
+}
+.btn-danger:hover {
+    background: rgba(255, 75, 75, 0.18);
+    border-color: rgba(255, 75, 75, 0.3);
+    color: #ff6666;
+}
+
+/* 6. 記憶體按鈕：淡雅灰色、字型較小 */
+.btn-mem {
+    background: rgba(255, 255, 255, 0.015);
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 13px;
+    font-weight: 500;
+}
+.btn-mem:hover {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* 7. 工程科學按鈕：深紫藍 */
+.btn-sci {
+    background: rgba(140, 0, 255, 0.03);
+    border-color: rgba(140, 0, 255, 0.08);
+    color: #c9bfff;
+    font-size: 14px;
+}
+.btn-sci:hover {
+    background: rgba(140, 0, 255, 0.1);
+    border-color: rgba(140, 0, 255, 0.2);
+    color: #dfd8ff;
+}
+
+/* 8. DEG/RAD 特殊切換按鈕：亮橘色 */
+.btn-sci.btn-accent {
+    background: rgba(255, 140, 0, 0.08);
+    border-color: rgba(255, 140, 0, 0.15);
+    color: #ffaa44;
+}
+.btn-sci.btn-accent:hover {
+    background: rgba(255, 140, 0, 0.18);
+    border-color: rgba(255, 140, 0, 0.3);
+    color: #ffbb66;
+}
+
+/* ==========================================================================
+   頁尾宣告設定 (Footer Layout)
+   ========================================================================== */
+.calc-footer {
+    margin-top: 24px;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.2);
+    letter-spacing: 0.5px;
+    z-index: 2;
+    text-align: center;
+}
+
+/* ==========================================================================
+   響應式設計：小螢幕手機版配置 (Responsive Layout)
+   ========================================================================== */
+@media (max-width: 880px) {
+    /* 計算機外框轉換為手機單一直向卡片 */
+    .calculator-chassis {
+        width: 440px;
+        border-radius: 24px;
+        padding: 20px;
+    }
+
+    .calc-title {
+        font-size: 11px;
+    }
+
+    /* 顯示行動版切換分頁 */
+    .mobile-tabs {
+        display: grid;
+    }
+
+    /* 鍵盤面板堆疊與單一顯示 */
+    .calc-keypad {
+        position: relative;
+        height: auto;
+    }
+
+    .keypad-panel {
+        width: 100%;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+    }
+
+    .btn {
+        height: 50px;
+        font-size: 15px;
+        border-radius: 11px;
+    }
+
+    .btn-num {
+        font-size: 17px;
+    }
+
+    /* 行動版時，非作用的分頁被隱藏 */
+    .keypad-panel.hidden-mobile {
+        display: none !important;
+    }
+}
+
+@media (max-width: 400px) {
+    .calculator-chassis {
+        padding: 16px;
+    }
+
+    .btn {
+        height: 44px;
+        font-size: 14px;
+    }
+
+    .btn-num {
+        font-size: 16px;
+    }
+}

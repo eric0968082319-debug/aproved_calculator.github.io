@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="一個功能完整的高級玻璃擬態工程計算機，支援基礎運算、科學函數、記憶模組與即時結果預覽。">
+    <title>高級工程計算機 (Scientific Calculator)</title>
+    <!-- 載入 Google Fonts: Inter (UI 介面) 與 Orbitron (液晶顯示螢幕) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Orbitron:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- 背景動態光暈效果 (用以突顯玻璃半透明質感) -->
+    <div class="bg-glow-container">
+        <div class="bg-glow circle-1"></div>
+        <div class="bg-glow circle-2"></div>
+        <div class="bg-glow circle-3"></div>
+    </div>
+
+    <!-- 計算機本體外框 -->
+    <main class="calculator-chassis" id="calculator">
+        <!-- 計算機頂部標題與狀態列 -->
+        <header class="calc-header">
+            <h1 class="calc-title">ENGINEERING CALCULATOR</h1>
+            <div class="calc-status">
+                <span id="indicator-mode" class="status-badge">DEG</span>
+                <span id="indicator-memory" class="status-badge hidden">M</span>
+            </div>
+        </header>
+
+        <!-- 玻璃擬態顯示螢幕 -->
+        <section class="calc-display" aria-label="計算機顯示螢幕">
+            <div class="display-container">
+                <div class="expression-line" id="expression-display" placeholder="0"></div>
+                <div class="result-line" id="result-display">0</div>
+            </div>
+        </section>
+
+        <!-- 行動版鍵盤切換分頁 (Mobile Only Tabs) -->
+        <div class="mobile-tabs" aria-label="鍵盤分頁選擇">
+            <button id="tab-basic" class="tab-btn active" onclick="switchKeypad('basic')">基礎鍵盤</button>
+            <button id="tab-scientific" class="tab-btn" onclick="switchKeypad('scientific')">工程鍵盤</button>
+        </div>
+
+        <!-- 鍵盤區域 -->
+        <section class="calc-keypad" aria-label="計算機鍵盤">
+            <!-- 工程運算鍵盤面板 (Scientific Panel) -->
+            <div class="keypad-panel panel-scientific hidden-mobile" id="panel-scientific">
+                <!-- 第一排：角度與括號 -->
+                <button type="button" class="btn btn-sci btn-accent" id="btn-deg-rad" onclick="toggleAngleMode()">DEG/RAD</button>
+                <button type="button" class="btn btn-sci" id="btn-left-paren" onclick="inputChar('(')">(</button>
+                <button type="button" class="btn btn-sci" id="btn-right-paren" onclick="inputChar(')')">)</button>
+                <button type="button" class="btn btn-sci" id="btn-mod" onclick="inputChar('%')">%</button>
+                
+                <!-- 第二排：三角函數與次方 -->
+                <button type="button" class="btn btn-sci" id="btn-sin" onclick="inputFunc('sin')">sin</button>
+                <button type="button" class="btn btn-sci" id="btn-cos" onclick="inputFunc('cos')">cos</button>
+                <button type="button" class="btn btn-sci" id="btn-tan" onclick="inputFunc('tan')">tan</button>
+                <button type="button" class="btn btn-sci" id="btn-power" onclick="inputChar('^')">xʸ</button>
+                
+                <!-- 第三排：反三角函數與平方根 -->
+                <button type="button" class="btn btn-sci" id="btn-asin" onclick="inputFunc('asin')">asin</button>
+                <button type="button" class="btn btn-sci" id="btn-acos" onclick="inputFunc('acos')">acos</button>
+                <button type="button" class="btn btn-sci" id="btn-atan" onclick="inputFunc('atan')">atan</button>
+                <button type="button" class="btn btn-sci" id="btn-sqrt" onclick="inputFunc('√')">√</button>
+                
+                <!-- 第四排：對數與常數 -->
+                <button type="button" class="btn btn-sci" id="btn-ln" onclick="inputFunc('ln')">ln</button>
+                <button type="button" class="btn btn-sci" id="btn-log" onclick="inputFunc('log')">log</button>
+                <button type="button" class="btn btn-sci" id="btn-pi" onclick="inputChar('π')">π</button>
+                <button type="button" class="btn btn-sci" id="btn-e" onclick="inputChar('e')">e</button>
+                
+                <!-- 第五排：階乘與進階數值 -->
+                <button type="button" class="btn btn-sci" id="btn-fact" onclick="inputChar('!')">n!</button>
+                <button type="button" class="btn btn-sci" id="btn-abs" onclick="inputFunc('abs')">abs</button>
+                <button type="button" class="btn btn-sci" id="btn-exp" onclick="inputChar('E')">Exp</button>
+                <button type="button" class="btn btn-sci" id="btn-recip" onclick="inputFunc('1/')">1/x</button>
+                
+                <!-- 第六排：次方與自然底數次冪 -->
+                <button type="button" class="btn btn-sci" id="btn-sqr" onclick="inputChar('^2')">x²</button>
+                <button type="button" class="btn btn-sci" id="btn-cube" onclick="inputChar('^3')">x³</button>
+                <button type="button" class="btn btn-sci" id="btn-pow10" onclick="inputChar('10^')">10ˣ</button>
+                <button type="button" class="btn btn-sci" id="btn-powe" onclick="inputChar('e^')">eˣ</button>
+            </div>
+
+            <!-- 基礎與數字鍵盤面板 (Basic Panel) -->
+            <div class="keypad-panel panel-basic" id="panel-basic">
+                <!-- 第一排：記憶體操作 -->
+                <button type="button" class="btn btn-mem" id="btn-mc" onclick="memClear()">MC</button>
+                <button type="button" class="btn btn-mem" id="btn-mr" onclick="memRecall()">MR</button>
+                <button type="button" class="btn btn-mem" id="btn-m-plus" onclick="memAdd()">M+</button>
+                <button type="button" class="btn btn-mem" id="btn-m-minus" onclick="memSub()">M-</button>
+                
+                <!-- 第二排：控制與除乘 -->
+                <button type="button" class="btn btn-ctrl btn-danger" id="btn-ac" onclick="clearAll()">AC</button>
+                <button type="button" class="btn btn-ctrl" id="btn-del" onclick="deleteChar()">DEL</button>
+                <button type="button" class="btn btn-op" id="btn-div" onclick="inputChar('÷')">÷</button>
+                <button type="button" class="btn btn-op" id="btn-mul" onclick="inputChar('×')">×</button>
+                
+                <!-- 第三排：數字 7 8 9 與減 -->
+                <button type="button" class="btn btn-num" id="btn-7" onclick="inputChar('7')">7</button>
+                <button type="button" class="btn btn-num" id="btn-8" onclick="inputChar('8')">8</button>
+                <button type="button" class="btn btn-num" id="btn-9" onclick="inputChar('9')">9</button>
+                <button type="button" class="btn btn-op" id="btn-sub" onclick="inputChar('-')">-</button>
+                
+                <!-- 第四排：數字 4 5 6 與加 -->
+                <button type="button" class="btn btn-num" id="btn-4" onclick="inputChar('4')">4</button>
+                <button type="button" class="btn btn-num" id="btn-5" onclick="inputChar('5')">5</button>
+                <button type="button" class="btn btn-num" id="btn-6" onclick="inputChar('6')">6</button>
+                <button type="button" class="btn btn-op" id="btn-add" onclick="inputChar('+')">+</button>
+                
+                <!-- 第五排：數字 1 2 3 與小數點 -->
+                <button type="button" class="btn btn-num" id="btn-1" onclick="inputChar('1')">1</button>
+                <button type="button" class="btn btn-num" id="btn-2" onclick="inputChar('2')">2</button>
+                <button type="button" class="btn btn-num" id="btn-3" onclick="inputChar('3')">3</button>
+                <button type="button" class="btn btn-num" id="btn-dot" onclick="inputChar('.')">.</button>
+                
+                <!-- 第六排：數字 0、記憶體儲存、前次結果與等於 -->
+                <button type="button" class="btn btn-num" id="btn-0" onclick="inputChar('0')">0</button>
+                <button type="button" class="btn btn-mem" id="btn-ms" onclick="memStore()">MS</button>
+                <button type="button" class="btn btn-ctrl" id="btn-ans" onclick="inputAns()">Ans</button>
+                <button type="button" class="btn btn-op btn-equals" id="btn-equals" onclick="calculateResult()">=</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- 頁尾宣告 -->
+    <footer class="calc-footer">
+        <p>Advanced Glassmorphism Scientific Calculator © 2026</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
